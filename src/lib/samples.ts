@@ -11,13 +11,15 @@
  * and continuous-tone images explode into thousands of paths.
  */
 
+import type { L10n } from './i18n';
+
 export interface Sample {
   id: string;
-  label: string;
+  label: L10n;
   /** Preset that suits this image. */
   preset: string;
   /** What to look for in the output. */
-  note: string;
+  note: L10n;
   svg: string;
 }
 
@@ -100,37 +102,52 @@ const continuousTone = `
 export const SAMPLES: Sample[] = [
   {
     id: 'logo',
-    label: '扁平 Logo',
+    label: { zh: '扁平 Logo', en: 'Flat logo' },
     preset: 'logo',
-    note: '理想情况：约 8 条路径就还原全部形状，SVG 比 PNG 小一个数量级。',
+    note: {
+      zh: '理想情况：约 8 条路径就还原全部形状，SVG 比 PNG 小一个数量级。',
+      en: 'The ideal case: ~8 paths reproduce every shape, and the SVG is an order of magnitude smaller than PNG.',
+    },
     svg: flatLogo,
   },
   {
     id: 'lineart',
-    label: '线稿',
+    label: { zh: '线稿', en: 'Line art' },
     preset: 'lineart',
-    note: '二值模式只描一层黑。调阈值看细线在哪里开始断开。',
+    note: {
+      zh: '二值模式只描一层黑。调阈值看细线在哪里开始断开。',
+      en: 'Binary mode traces a single black layer. Adjust the threshold to see where thin lines start breaking.',
+    },
     svg: lineArt,
   },
   {
     id: 'poster',
-    label: '色块插画',
+    label: { zh: '色块插画', en: 'Poster art' },
     preset: 'poster',
-    note: '几百条路径，参数在这里最有价值：限色和 simplify 能把体积砍掉一半以上。',
+    note: {
+      zh: '几百条路径，参数在这里最有价值：限色和 simplify 能把体积砍掉一半以上。',
+      en: 'Hundreds of paths — where tuning pays off most: colour capping and simplify can halve the size.',
+    },
     svg: posterized,
   },
   {
     id: 'gradient',
-    label: '平滑渐变',
+    label: { zh: '平滑渐变', en: 'Smooth gradient' },
     preset: 'poster',
-    note: '注意：渐变没有被切成色带，而是被整个压成几块纯色 —— 这是 VTracer 的硬限制。',
+    note: {
+      zh: '注意：渐变没有被切成色带，而是被整个压成几块纯色 —— 这是 VTracer 的硬限制。',
+      en: 'Note: the gradient is not banded — it collapses into a few flat fills. A hard VTracer limitation.',
+    },
     svg: smoothGradient,
   },
   {
     id: 'tone',
-    label: '连续调（类照片）',
+    label: { zh: '连续调（类照片）', en: 'Continuous tone (photo-like)' },
     preset: 'photo',
-    note: '路径数上千、体积可超过 1 MB。把斑点过滤调到 0 看它彻底失控。',
+    note: {
+      zh: '路径数上千、体积可超过 1 MB。把斑点过滤调到 0 看它彻底失控。',
+      en: 'Thousands of paths, size can exceed 1 MB. Set speckle filter to 0 to watch it blow up.',
+    },
     svg: continuousTone,
   },
 ];

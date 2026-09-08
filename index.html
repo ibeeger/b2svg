@@ -10,35 +10,35 @@
     <main class="layout">
       <aside class="panel" id="panel">
         <section class="block">
-          <h2>输入</h2>
-          <div class="dropzone" id="dropzone" tabindex="0" role="button" aria-label="选择或拖入图片">
-            <strong>拖入图片</strong>
-            <span>或点击选择 · PNG / JPEG / GIF / WebP / SVG</span>
+          <h2 data-i18n="inputSection">输入</h2>
+          <div class="dropzone" id="dropzone" tabindex="0" role="button" data-i18n-aria="dropAria" aria-label="选择或拖入图片">
+            <strong data-i18n="dropTitle">拖入图片</strong>
+            <span data-i18n="dropSub">或点击选择 · PNG / JPEG / GIF / WebP / SVG</span>
           </div>
           <input type="file" id="file" accept="image/*" hidden />
 
           <div class="samples" id="samples"></div>
 
           <label class="field">
-            <span>最长边上限 <b id="maxEdgeValue">512</b> px</span>
+            <span><span data-i18n="maxEdgePrefix">最长边上限</span> <b id="maxEdgeValue">512</b> <span data-i18n="maxEdgeSuffix">px</span></span>
             <input type="range" id="maxEdge" min="128" max="2048" step="64" value="512" />
-            <em>决定速度和路径数量的最重要参数。</em>
+            <em data-i18n="maxEdgeHint">决定速度和路径数量的最重要参数。</em>
           </label>
 
           <label class="check">
             <input type="checkbox" id="flattenAlpha" />
-            <span>透明背景合成为白色</span>
+            <span data-i18n="flattenAlpha">透明背景合成为白色</span>
           </label>
         </section>
 
         <section class="block">
-          <h2>预设</h2>
+          <h2 data-i18n="presetsSection">预设</h2>
           <div class="presets" id="presets"></div>
           <p class="hint" id="presetHint"></p>
         </section>
 
         <section class="block">
-          <h2>参数</h2>
+          <h2 data-i18n="paramsSection">参数</h2>
           <div id="controls" class="controls"></div>
         </section>
       </aside>
@@ -46,33 +46,34 @@
       <section class="stage">
         <div class="stage-toolbar">
           <div class="tabs" id="viewTabs">
-            <button data-view="split" class="active">对比</button>
-            <button data-view="source">原图</button>
-            <button data-view="result">SVG</button>
-            <button data-view="code">代码</button>
+            <button data-view="split" class="active" data-i18n="tabSplit">对比</button>
+            <button data-view="source" data-i18n="tabSource">原图</button>
+            <button data-view="result" data-i18n="tabResult">SVG</button>
+            <button data-view="code" data-i18n="tabCode">代码</button>
           </div>
           <div class="spacer"></div>
           <label class="check inline">
             <input type="checkbox" id="showOutlines" />
-            <span>描边预览</span>
+            <span data-i18n="outlines">描边预览</span>
           </label>
-          <button id="download" class="primary" disabled>下载 SVG</button>
+          <button id="langToggle" class="lang-toggle" type="button">EN</button>
+          <button id="download" class="primary" disabled data-i18n="download">下载 SVG</button>
         </div>
 
         <div class="viewer" id="viewer">
           <div class="pane" id="paneSource">
-            <div class="pane-label">原图（已缩放）</div>
+            <div class="pane-label" data-i18n="paneSource">原图（已缩放）</div>
             <div class="canvas-wrap"><canvas id="sourceCanvas"></canvas></div>
           </div>
           <div class="pane" id="paneResult">
-            <div class="pane-label">矢量结果</div>
+            <div class="pane-label" data-i18n="paneResult">矢量结果</div>
             <div class="canvas-wrap"><div id="svgHost" class="svg-host"></div></div>
           </div>
           <pre class="pane code" id="paneCode"><code id="svgCode"></code></pre>
         </div>
 
         <div class="stats" id="stats">
-          <span class="placeholder">选择一张图片开始。</span>
+          <span class="placeholder" data-i18n="placeholder">选择一张图片开始。</span>
         </div>
       </section>
     </main>

@@ -1,4 +1,5 @@
 import './style.css';
+import { applyStaticI18n, getLocale, setLocale, t, tx, type L10n } from './lib/i18n';
 import { decodeToRgba, formatBytes } from './lib/image';
 import { activeControls, type Control } from './lib/controls';
 import { PRESETS, presetById } from './lib/presets';
@@ -24,6 +25,7 @@ const els = {
   controls: $<HTMLDivElement>('controls'),
   viewTabs: $<HTMLDivElement>('viewTabs'),
   showOutlines: $<HTMLInputElement>('showOutlines'),
+  langToggle: $<HTMLButtonElement>('langToggle'),
   download: $<HTMLButtonElement>('download'),
   viewer: $<HTMLDivElement>('viewer'),
   sourceCanvas: $<HTMLCanvasElement>('sourceCanvas'),
@@ -43,6 +45,8 @@ interface State {
   presetId: string;
   options: TraceOptions;
   result: TraceResult | null;
+  /** Guidance line for the loaded built-in sample, shown in the stats bar. */
+  note: L10n | null;
   busy: boolean;
 }
 
@@ -55,6 +59,7 @@ const state: State = {
   presetId: PRESETS[0].id,
   options: { ...PRESETS[0].options },
   result: null,
+  note: null,
   busy: false,
 };
 
@@ -66,7 +71,7 @@ function renderPresets() {
   els.presets.replaceChildren(
     ...PRESETS.map((preset) => {
       const button = document.createElement('button');
-      button.textContent = preset.label;
+      button.textContent = tx(preset.label);
       button.className = preset.id === state.presetId ? 'chip active' : 'chip';
       button.onclick = () => {
         state.presetId = preset.id;
@@ -78,7 +83,7 @@ function renderPresets() {
       return button;
     }),
   );
-  els.presetHint.textContent = presetById(state.presetId).hint;
+  els.presetHint.textContent = tx(presetById(state.presetId).hint);
 }
 
 function renderSamples() {
@@ -86,15 +91,16 @@ function renderSamples() {
     ...SAMPLES.map((sample) => {
       const button = document.createElement('button');
       button.className = 'chip ghost';
-      button.textContent = sample.label;
-      button.title = sample.note;
+      button.textContent = tx(sample.label);
+      button.title = tx(sample.note);
       button.onclick = () => {
         state.presetId = sample.preset;
         state.options = { ...presetById(sample.preset).options };
         renderPresets();
         renderControls();
         state.sourceSample = sample;
-        void loadSource(null, `sample-${sample.id}`, sample.note);
+        state.note = sample.note;
+        void loadSource(null, `sample-${sample.id}`);
       };
       return button;
     }),
@@ -106,7 +112,7 @@ function controlRow(control: Control): HTMLElement {
   row.className = 'field';
 
   const head = document.createElement('span');
-  head.textContent = control.label;
+  head.textContent = tx(control.label);
   row.append(head);
 
   if (control.kind === 'range') {
@@ -134,7 +140,7 @@ function controlRow(control: Control): HTMLElement {
       ...control.choices.map((choice) => {
         const option = document.createElement('option');
         option.value = choice.value;
-        option.textContent = choice.label;
+        option.textContent = tx(choice.label);
         return option;
       }),
     );
@@ -161,7 +167,7 @@ function controlRow(control: Control): HTMLElement {
 
   if (control.hint) {
     const hint = document.createElement('em');
-    hint.textContent = control.hint;
+    hint.textContent = tx(control.hint);
     row.append(hint);
   }
   return row;
@@ -171,27 +177,30 @@ function renderControls() {
   els.controls.replaceChildren(...activeControls(state.options).map(controlRow));
 }
 
-function renderStats(note?: string) {
-  const { image, result, sourcePngBytes } = state;
+function renderStats() {
+  const { image, result, sourcePngBytes, note } = state;
   if (!image) {
     els.stats.replaceChildren(Object.assign(document.createElement('span'), {
       className: 'placeholder',
-      textContent: '选择一张图片开始。',
+      textContent: t('placeholder'),
     }));
     return;
   }
 
-  const items: [string, string][] = [['尺寸', `${image.width} × ${image.height}`]];
+  const items: [string, string][] = [[t('statSize'), `${image.width} × ${image.height}`]];
 
   if (result) {
     items.push(
-      ['耗时', `${result.durationMs.toFixed(0)} ms`],
-      ['路径数', String(result.pathCount)],
-      ['SVG 体积', formatBytes(result.bytes)],
+      [t('statTime'), `${result.durationMs.toFixed(0)} ms`],
+      [t('statPaths'), String(result.pathCount)],
+      [t('statBytes'), formatBytes(result.bytes)],
     );
     if (sourcePngBytes > 0) {
       const ratio = result.bytes / sourcePngBytes;
-      items.push(['对比 PNG', `${ratio < 1 ? '小' : '大'} ${ratio < 1 ? (1 / ratio).toFixed(1) : ratio.toFixed(1)}×`]);
+      const vs = ratio < 1
+        ? t('vsSmaller', { n: (1 / ratio).toFixed(1) })
+        : t('vsLarger', { n: ratio.toFixed(1) });
+      items.push([t('statVsPng'), vs]);
     }
   }
 
@@ -207,14 +216,14 @@ function renderStats(note?: string) {
   if (result && result.pathCount > 2000) {
     const warn = document.createElement('span');
     warn.className = 'stat warn';
-    warn.textContent = '路径数过多，这类图更适合保留位图';
+    warn.textContent = t('warnPaths');
     nodes.push(warn);
   }
 
   if (note) {
     const hint = document.createElement('span');
     hint.className = 'stat note';
-    hint.textContent = note;
+    hint.textContent = tx(note);
     nodes.push(hint);
   }
   els.stats.replaceChildren(...nodes);
@@ -244,16 +253,19 @@ function paintResult(result: TraceResult) {
 // ------------------------------------------------------------------- actions
 
 /** `blob === null` means the source is the built-in sample in `state.sourceSample`. */
-async function loadSource(blob: Blob | null, name: string, note?: string) {
+async function loadSource(blob: Blob | null, name: string) {
   state.sourceBlob = blob;
-  if (blob) state.sourceSample = null;
+  if (blob) {
+    state.sourceSample = null;
+    state.note = null;
+  }
   state.sourceName = name.replace(/\.[^.]+$/, '') || 'image';
   els.dropzone.classList.add('loaded');
-  await redecode(note);
+  await redecode();
 }
 
 /** Re-decode from the original source — needed whenever maxEdge or matting changes. */
-async function redecode(note?: string) {
+async function redecode() {
   const maxEdge = Number(els.maxEdge.value);
 
   // Samples are vector sources, so re-rasterize them at the target size instead
@@ -273,8 +285,8 @@ async function redecode(note?: string) {
 
   paintSource(state.image);
   state.sourcePngBytes = await measurePngBytes(els.sourceCanvas);
-  renderStats(note);
-  await retrace(note);
+  renderStats();
+  await retrace();
 }
 
 /** Size of the downscaled source re-encoded as PNG, so the size stat compares like with like. */
@@ -286,15 +298,15 @@ function measurePngBytes(canvas: HTMLCanvasElement): Promise<number> {
 
 let retraceTimer: number | undefined;
 
-function retrace(note?: string): Promise<void> {
+function retrace(): Promise<void> {
   // Slider drags fire per pixel; coalesce them into one trace.
   window.clearTimeout(retraceTimer);
   return new Promise((resolve) => {
-    retraceTimer = window.setTimeout(() => void runTrace(note).then(resolve), 120);
+    retraceTimer = window.setTimeout(() => void runTrace().then(resolve), 120);
   });
 }
 
-async function runTrace(note?: string) {
+async function runTrace() {
   if (!state.image) return;
 
   state.busy = true;
@@ -305,7 +317,7 @@ async function runTrace(note?: string) {
     state.result = result;
     paintResult(result);
     els.download.disabled = false;
-    renderStats(note);
+    renderStats();
   } catch (err) {
     if (err instanceof TraceAbortedError) return; // a newer trace is already running
     showError(err);
@@ -327,7 +339,7 @@ function showError(err: unknown) {
   const message = err instanceof Error ? err.message : String(err);
   const box = document.createElement('span');
   box.className = 'stat error';
-  box.textContent = `出错：${message}`;
+  box.textContent = t('errorPrefix') + message;
   els.stats.replaceChildren(box);
 }
 
@@ -393,9 +405,23 @@ els.viewTabs.onclick = (event) => {
 
 els.download.onclick = download;
 
-renderPresets();
-renderSamples();
-renderControls();
+/** Repaint every translatable surface. Trace results are language-neutral. */
+function applyLocale() {
+  applyStaticI18n();
+  // The toggle shows the language you'd switch TO.
+  els.langToggle.textContent = getLocale() === 'zh' ? 'EN' : '中文';
+  renderPresets();
+  renderSamples();
+  renderControls();
+  renderStats();
+}
+
+els.langToggle.onclick = () => {
+  setLocale(getLocale() === 'zh' ? 'en' : 'zh');
+  applyLocale();
+};
+
+applyLocale();
 els.viewer.dataset.view = 'split';
 
 // Warm the wasm module so the first real trace isn't paying instantiation cost.

@@ -370,3 +370,15 @@ button.primary:disabled {
 }
 
 .stat.warn { color: #ffb454; }
+
+.lang-toggle {
+  background: transparent;
+  border: 1px solid var(--line);
+  color: var(--muted);
+  border-radius: 7px;
+  padding: 5px 10px;
+  font-size: 12px;
+  cursor: pointer;
+}
+
+.lang-toggle:hover { color: var(--text); border-color: var(--accent); }

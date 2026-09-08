@@ -1,9 +1,10 @@
+import type { L10n } from './i18n';
 import type { TraceOptions } from './types';
 
 export interface Preset {
   id: string;
-  label: string;
-  hint: string;
+  label: L10n;
+  hint: L10n;
   options: TraceOptions;
 }
 
@@ -15,8 +16,11 @@ export interface Preset {
 export const PRESETS: Preset[] = [
   {
     id: 'logo',
-    label: 'Logo / 图标',
-    hint: '扁平色块、锐利边缘。VTracer 最擅长的场景。',
+    label: { zh: 'Logo / 图标', en: 'Logo / Icon' },
+    hint: {
+      zh: '扁平色块、锐利边缘。VTracer 最擅长的场景。',
+      en: 'Flat fills and crisp edges — the case VTracer handles best.',
+    },
     options: {
       clustering: 'color-cluster',
       hierarchical: 'stacked',
@@ -34,8 +38,11 @@ export const PRESETS: Preset[] = [
   },
   {
     id: 'lineart',
-    label: '线稿 / 黑白',
-    hint: '二值化后只描一层黑。签名、扫描线稿、二维码。',
+    label: { zh: '线稿 / 黑白', en: 'Line art / B&W' },
+    hint: {
+      zh: '二值化后只描一层黑。签名、扫描线稿、二维码。',
+      en: 'Thresholds to binary and traces a single black layer. Signatures, scans, QR codes.',
+    },
     options: {
       clustering: 'bw',
       mode: 'spline',
@@ -53,8 +60,11 @@ export const PRESETS: Preset[] = [
   },
   {
     id: 'poster',
-    label: '色块插画',
-    hint: '多色平面插画。限色 + simplify 是压体积最有效的两个旋钮。',
+    label: { zh: '色块插画', en: 'Poster art' },
+    hint: {
+      zh: '多色平面插画。限色 + simplify 是压体积最有效的两个旋钮。',
+      en: 'Multi-colour flat illustration. Colour capping + simplify are the two best size levers.',
+    },
     options: {
       clustering: 'color-cluster',
       hierarchical: 'stacked',
@@ -73,8 +83,11 @@ export const PRESETS: Preset[] = [
   },
   {
     id: 'photo',
-    label: '连续调（对照用）',
-    hint: '照片类图像会产生上千条路径、体积可能超过原图。放这里是让你看清边界。',
+    label: { zh: '连续调（对照用）', en: 'Continuous tone (reference)' },
+    hint: {
+      zh: '照片类图像会产生上千条路径、体积可能超过原图。放这里是让你看清边界。',
+      en: 'Photo-like images yield thousands of paths and can exceed the original in size. Included to show the limits.',
+    },
     options: {
       clustering: 'color-cluster',
       hierarchical: 'stacked',
@@ -93,8 +106,11 @@ export const PRESETS: Preset[] = [
   },
   {
     id: 'pixel',
-    label: '像素图',
-    hint: '不做曲线拟合，逐像素边界输出，保持硬边。',
+    label: { zh: '像素图', en: 'Pixel art' },
+    hint: {
+      zh: '不做曲线拟合，逐像素边界输出，保持硬边。',
+      en: 'No curve fitting — pixel-exact boundaries, hard edges preserved.',
+    },
     options: {
       clustering: 'color-cluster',
       hierarchical: 'stacked',
