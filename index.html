@@ -1,10 +1,10 @@
 <!doctype html>
-<html lang="zh-CN">
+<html lang="en">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%230f1115'/%3E%3Cpath d='M7 23 L16 8 L25 23 Z' fill='none' stroke='%234c8dff' stroke-width='2.5' stroke-linejoin='round'/%3E%3Ccircle cx='16' cy='8' r='2.6' fill='%234c8dff'/%3E%3Ccircle cx='7' cy='23' r='2.6' fill='%234c8dff'/%3E%3Ccircle cx='25' cy='23' r='2.6' fill='%234c8dff'/%3E%3C/svg%3E" />
-    <title>位图转矢量 · VTracer WASM</title>
+    <title>Bitmap to Vector · VTracer WASM</title>
     <!-- Google tag (gtag.js) -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-8G94C9SWQ5"></script>
     <script>
@@ -19,35 +19,35 @@
     <main class="layout">
       <aside class="panel" id="panel">
         <section class="block">
-          <h2 data-i18n="inputSection">输入</h2>
-          <div class="dropzone" id="dropzone" tabindex="0" role="button" data-i18n-aria="dropAria" aria-label="选择或拖入图片">
-            <strong data-i18n="dropTitle">拖入图片</strong>
-            <span data-i18n="dropSub">或点击选择 · PNG / JPEG / GIF / WebP / SVG</span>
+          <h2 data-i18n="inputSection">Input</h2>
+          <div class="dropzone" id="dropzone" tabindex="0" role="button" data-i18n-aria="dropAria" aria-label="Choose or drop an image">
+            <strong data-i18n="dropTitle">Drop an image</strong>
+            <span data-i18n="dropSub">or click to choose · PNG / JPEG / GIF / WebP / SVG</span>
           </div>
           <input type="file" id="file" accept="image/*" hidden />
 
           <div class="samples" id="samples"></div>
 
           <label class="field">
-            <span><span data-i18n="maxEdgePrefix">最长边上限</span> <b id="maxEdgeValue">512</b> <span data-i18n="maxEdgeSuffix">px</span></span>
+            <span><span data-i18n="maxEdgePrefix">Max edge</span> <b id="maxEdgeValue">512</b> <span data-i18n="maxEdgeSuffix">px</span></span>
             <input type="range" id="maxEdge" min="128" max="2048" step="64" value="512" />
-            <em data-i18n="maxEdgeHint">决定速度和路径数量的最重要参数。</em>
+            <em data-i18n="maxEdgeHint">The single most important setting for speed and path count.</em>
           </label>
 
           <label class="check">
             <input type="checkbox" id="flattenAlpha" />
-            <span data-i18n="flattenAlpha">透明背景合成为白色</span>
+            <span data-i18n="flattenAlpha">Flatten transparency onto white</span>
           </label>
         </section>
 
         <section class="block">
-          <h2 data-i18n="presetsSection">预设</h2>
+          <h2 data-i18n="presetsSection">Presets</h2>
           <div class="presets" id="presets"></div>
           <p class="hint" id="presetHint"></p>
         </section>
 
         <section class="block">
-          <h2 data-i18n="paramsSection">参数</h2>
+          <h2 data-i18n="paramsSection">Parameters</h2>
           <div id="controls" class="controls"></div>
         </section>
       </aside>
@@ -55,34 +55,34 @@
       <section class="stage">
         <div class="stage-toolbar">
           <div class="tabs" id="viewTabs">
-            <button data-view="split" class="active" data-i18n="tabSplit">对比</button>
-            <button data-view="source" data-i18n="tabSource">原图</button>
+            <button data-view="split" class="active" data-i18n="tabSplit">Compare</button>
+            <button data-view="source" data-i18n="tabSource">Source</button>
             <button data-view="result" data-i18n="tabResult">SVG</button>
-            <button data-view="code" data-i18n="tabCode">代码</button>
+            <button data-view="code" data-i18n="tabCode">Code</button>
           </div>
           <div class="spacer"></div>
           <label class="check inline">
             <input type="checkbox" id="showOutlines" />
-            <span data-i18n="outlines">描边预览</span>
+            <span data-i18n="outlines">Outline preview</span>
           </label>
-          <button id="langToggle" class="lang-toggle" type="button">EN</button>
-          <button id="download" class="primary" disabled data-i18n="download">下载 SVG</button>
+          <button id="langToggle" class="lang-toggle" type="button">中文</button>
+          <button id="download" class="primary" disabled data-i18n="download">Download SVG</button>
         </div>
 
         <div class="viewer" id="viewer">
           <div class="pane" id="paneSource">
-            <div class="pane-label" data-i18n="paneSource">原图（已缩放）</div>
+            <div class="pane-label" data-i18n="paneSource">Source (scaled)</div>
             <div class="canvas-wrap"><canvas id="sourceCanvas"></canvas></div>
           </div>
           <div class="pane" id="paneResult">
-            <div class="pane-label" data-i18n="paneResult">矢量结果</div>
+            <div class="pane-label" data-i18n="paneResult">Vector result</div>
             <div class="canvas-wrap"><div id="svgHost" class="svg-host"></div></div>
           </div>
           <pre class="pane code" id="paneCode"><code id="svgCode"></code></pre>
         </div>
 
         <div class="stats" id="stats">
-          <span class="placeholder" data-i18n="placeholder">选择一张图片开始。</span>
+          <span class="placeholder" data-i18n="placeholder">Pick an image to start.</span>
         </div>
       </section>
     </main>

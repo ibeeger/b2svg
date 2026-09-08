@@ -22,9 +22,10 @@ function detect(): Locale {
     const saved = localStorage.getItem(STORAGE_KEY);
     if (saved === 'zh' || saved === 'en') return saved;
   } catch {
-    // storage unavailable (private mode etc.) — fall through to language sniff
+    // storage unavailable (private mode etc.) — fall through to the default
   }
-  return navigator.language?.toLowerCase().startsWith('zh') ? 'zh' : 'en';
+  // English by default; the toggle (persisted above) is the way to opt into zh.
+  return 'en';
 }
 
 let locale: Locale = detect();
