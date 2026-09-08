@@ -1,0 +1,5 @@
+node_modules/
+dist/
+# Regenerated from node_modules by scripts/build-vtracer-web.mjs
+src/vendor/
+.DS_Store
