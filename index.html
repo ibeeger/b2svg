@@ -3,9 +3,159 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%230f1115'/%3E%3Cpath d='M7 23 L16 8 L25 23 Z' fill='none' stroke='%234c8dff' stroke-width='2.5' stroke-linejoin='round'/%3E%3Ccircle cx='16' cy='8' r='2.6' fill='%234c8dff'/%3E%3Ccircle cx='7' cy='23' r='2.6' fill='%234c8dff'/%3E%3Ccircle cx='25' cy='23' r='2.6' fill='%234c8dff'/%3E%3C/svg%3E" />
-    <title>Bitmap to Vector · VTracer WASM</title>
+
+    <title>Bitmap to Vector — Free Online Image to SVG Converter</title>
+    <meta
+      name="description"
+      content="Convert PNG, JPEG, GIF and WebP images into clean SVG vector paths right in your browser. Powered by VTracer WebAssembly — no upload, no signup, no watermark."
+    />
+    <meta
+      name="keywords"
+      content="image to svg, png to svg, jpg to svg, bitmap to vector, raster to vector, vectorizer, image vectorization, vtracer, svg converter, online tracer, free svg converter"
+    />
+    <meta name="author" content="xiaohan" />
+    <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1" />
+    <meta name="theme-color" content="#0f1115" />
+    <meta name="color-scheme" content="dark" />
+    <meta name="application-name" content="Bitmap to Vector" />
+
+    <!-- Canonical + language alternates. The zh copy lives at the same document
+         behind ?lang=zh; src/lib/seo.ts keeps <link rel=canonical> pointed at
+         whichever of the two is currently rendered. -->
+    <link rel="canonical" href="https://svg.xiaohan.dev/" id="canonicalLink" />
+    <link rel="alternate" hreflang="en" href="https://svg.xiaohan.dev/" />
+    <link rel="alternate" hreflang="zh-Hans" href="https://svg.xiaohan.dev/?lang=zh" />
+    <link rel="alternate" hreflang="x-default" href="https://svg.xiaohan.dev/" />
+
+    <!-- Open Graph -->
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="Bitmap to Vector" />
+    <meta property="og:url" content="https://svg.xiaohan.dev/" id="ogUrl" />
+    <meta property="og:title" content="Bitmap to Vector — Free Online Image to SVG Converter" id="ogTitle" />
+    <meta
+      property="og:description"
+      content="Convert PNG, JPEG, GIF and WebP images into clean SVG vector paths right in your browser. Powered by VTracer WebAssembly — no upload, no signup, no watermark."
+      id="ogDescription"
+    />
+    <meta property="og:image" content="https://svg.xiaohan.dev/og.png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="Bitmap to Vector — a pixel grid turning into a smooth vector path" />
+    <meta property="og:locale" content="en_US" id="ogLocale" />
+    <meta property="og:locale:alternate" content="zh_CN" />
+
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Bitmap to Vector — Free Online Image to SVG Converter" id="twitterTitle" />
+    <meta
+      name="twitter:description"
+      content="Convert PNG, JPEG, GIF and WebP images into clean SVG vector paths right in your browser. No upload, no signup, no watermark."
+      id="twitterDescription"
+    />
+    <meta name="twitter:image" content="https://svg.xiaohan.dev/og.png" />
+
+    <link rel="icon" href="/icon.svg" type="image/svg+xml" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    <link rel="manifest" href="/site.webmanifest" />
+
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@graph": [
+          {
+            "@type": "WebApplication",
+            "@id": "https://svg.xiaohan.dev/#app",
+            "name": "Bitmap to Vector",
+            "alternateName": "位图转矢量",
+            "url": "https://svg.xiaohan.dev/",
+            "description": "Browser-only bitmap vectorizer: converts PNG, JPEG, GIF, WebP and SVG images into SVG vector paths using VTracer compiled to WebAssembly. Images are never uploaded.",
+            "applicationCategory": "MultimediaApplication",
+            "applicationSubCategory": "Image converter",
+            "operatingSystem": "Any (modern web browser)",
+            "browserRequirements": "Requires WebAssembly and Web Workers",
+            "inLanguage": ["en", "zh-Hans"],
+            "isAccessibleForFree": true,
+            "image": "https://svg.xiaohan.dev/og.png",
+            "screenshot": "https://svg.xiaohan.dev/og.png",
+            "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+            "featureList": [
+              "Convert PNG, JPEG, GIF, WebP and SVG to SVG vector paths",
+              "Runs fully client-side — no upload and no account",
+              "Presets for flat logos, line art, colour illustration and photos",
+              "Live control over speckle filtering, colour precision and curve fitting",
+              "Side-by-side compare, outline preview and raw SVG code view",
+              "Path count, SVG size and size-vs-PNG statistics"
+            ],
+            "softwareHelp": "https://svg.xiaohan.dev/#faq"
+          },
+          {
+            "@type": "FAQPage",
+            "@id": "https://svg.xiaohan.dev/#faq",
+            "mainEntity": [
+              {
+                "@type": "Question",
+                "name": "Are my images uploaded to a server?",
+                "acceptedAnswer": {
+                  "@type": "Answer",
+                  "text": "No. Decoding, tracing and export all happen inside your browser using WebAssembly in a Web Worker. The file never leaves your device, so the tool also works offline once the page has loaded."
+                }
+              },
+              {
+                "@type": "Question",
+                "name": "Which image formats can I convert to SVG?",
+                "acceptedAnswer": {
+                  "@type": "Answer",
+                  "text": "Anything your browser can decode: PNG, JPEG, GIF, WebP, BMP and even SVG, which is rasterized first and then re-traced. The output is always a standard SVG file."
+                }
+              },
+              {
+                "@type": "Question",
+                "name": "Does vectorizing a photo work well?",
+                "acceptedAnswer": {
+                  "@type": "Answer",
+                  "text": "Usually not. Photographs produce thousands of paths and an SVG that is often larger and slower to render than the original PNG or JPEG. Vectorization pays off for logos, icons, line art, flat illustrations and scanned drawings."
+                }
+              },
+              {
+                "@type": "Question",
+                "name": "Why is my SVG larger than the source PNG?",
+                "acceptedAnswer": {
+                  "@type": "Answer",
+                  "text": "Every colour region becomes a path with its own coordinates. When an image contains thousands of small regions, storing those coordinates costs more bytes than pixel compression. Lower the max edge, raise filter speckle, or reduce the colour count to bring the size down."
+                }
+              },
+              {
+                "@type": "Question",
+                "name": "What is VTracer?",
+                "acceptedAnswer": {
+                  "@type": "Answer",
+                  "text": "VTracer is an open-source raster-to-vector tracer from VisionCortex, written in Rust. It clusters pixels into colour regions and fits curves along their borders, so it handles full-colour artwork rather than only black-and-white images like a classic auto-trace."
+                }
+              },
+              {
+                "@type": "Question",
+                "name": "Can I edit the result in Illustrator, Figma or Inkscape?",
+                "acceptedAnswer": {
+                  "@type": "Answer",
+                  "text": "Yes. The output is a plain SVG made of standard path elements with solid fills. Keep the path count in the low hundreds if you want the file to stay comfortable to edit by hand."
+                }
+              },
+              {
+                "@type": "Question",
+                "name": "Is it really free?",
+                "acceptedAnswer": {
+                  "@type": "Answer",
+                  "text": "Yes — free and unlimited, with no account, no file-size quota and no watermark. There is no backend to pay for because the conversion runs on your own machine."
+                }
+              }
+            ]
+          }
+        ]
+      }
+    </script>
+
     <!-- Google tag (gtag.js) -->
+    <link rel="preconnect" href="https://www.googletagmanager.com" />
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-8G94C9SWQ5"></script>
     <script>
       window.dataLayer = window.dataLayer || [];
@@ -65,6 +215,7 @@
             <input type="checkbox" id="showOutlines" />
             <span data-i18n="outlines">Outline preview</span>
           </label>
+          <a class="about-link" href="#about" data-i18n="aboutLink">About &amp; FAQ</a>
           <button id="langToggle" class="lang-toggle" type="button">中文</button>
           <button id="download" class="primary" disabled data-i18n="download">Download SVG</button>
         </div>
@@ -86,6 +237,96 @@
         </div>
       </section>
     </main>
+
+    <!-- Crawlable prose. Everything above is an app shell with almost no text in
+         it; this section is what actually describes the tool to search engines
+         and to first-time visitors. Keys mirror src/lib/i18n.ts. -->
+    <section class="about" id="about">
+      <div class="about-inner">
+        <h1 data-i18n="seoH1">Bitmap to Vector — a free online image to SVG converter</h1>
+        <p class="about-lead" data-i18n="seoLead">
+          Turn PNG, JPEG, GIF, WebP or SVG bitmaps into clean, infinitely scalable SVG vector paths.
+          The conversion runs entirely inside your browser with VTracer compiled to WebAssembly, so
+          your images are never uploaded, there is nothing to install, and there is no account, quota
+          or watermark.
+        </p>
+
+        <h2 data-i18n="seoFeaturesTitle">Why use this vectorizer</h2>
+        <ul class="about-cards">
+          <li>
+            <h3 data-i18n="feat1T">Nothing leaves your device</h3>
+            <p data-i18n="feat1B">Decoding, tracing and export all happen locally in a Web Worker. No server ever sees your file, which also means it keeps working offline.</p>
+          </li>
+          <li>
+            <h3 data-i18n="feat2T">The real VTracer engine</h3>
+            <p data-i18n="feat2B">The same Rust colour-clustering tracer used by the desktop tool, compiled to WebAssembly — full-colour tracing, not just black-and-white thresholding.</p>
+          </li>
+          <li>
+            <h3 data-i18n="feat3T">Every parameter is live</h3>
+            <p data-i18n="feat3B">Filter speckle, colour precision, gradient step, corner threshold and curve fitting all re-trace instantly, so you can tune by eye instead of guessing.</p>
+          </li>
+          <li>
+            <h3 data-i18n="feat4T">Presets that match the artwork</h3>
+            <p data-i18n="feat4B">Start from a preset for flat logos, line art, colour illustration or photo-like images, then adjust from there. Built-in samples show how each type behaves.</p>
+          </li>
+          <li>
+            <h3 data-i18n="feat5T">Honest numbers</h3>
+            <p data-i18n="feat5B">Path count, SVG size, trace time and a size comparison against the equivalent PNG — so you can tell when vectorizing an image is simply the wrong call.</p>
+          </li>
+          <li>
+            <h3 data-i18n="feat6T">Free and open source</h3>
+            <p data-i18n="feat6B">No sign-up, no upload limit, no watermark, no paid tier. The whole site is a static page you can read, fork and self-host.</p>
+          </li>
+        </ul>
+
+        <h2 data-i18n="seoHowTitle">How to convert an image to SVG</h2>
+        <ol class="about-steps">
+          <li data-i18n="step1">Drop a PNG, JPEG, GIF, WebP or SVG file onto the panel — or click a built-in sample to try it without a file of your own.</li>
+          <li data-i18n="step2">Pick the preset that matches your artwork, then fine-tune the parameters. Max edge is the setting that most affects both speed and path count.</li>
+          <li data-i18n="step3">Compare the source and the vector result side by side, switch on the outline preview to see the traced geometry, or read the generated SVG code directly.</li>
+          <li data-i18n="step4">Download the SVG and open it in Illustrator, Figma, Inkscape or any browser.</li>
+        </ol>
+
+        <h2 data-i18n="seoFaqTitle">Frequently asked questions</h2>
+        <div class="about-faq" id="faq">
+          <details>
+            <summary data-i18n="faq1Q">Are my images uploaded to a server?</summary>
+            <p data-i18n="faq1A">No. Decoding, tracing and export all happen inside your browser using WebAssembly in a Web Worker. The file never leaves your device, so the tool also works offline once the page has loaded.</p>
+          </details>
+          <details>
+            <summary data-i18n="faq2Q">Which image formats can I convert to SVG?</summary>
+            <p data-i18n="faq2A">Anything your browser can decode: PNG, JPEG, GIF, WebP, BMP and even SVG, which is rasterized first and then re-traced. The output is always a standard SVG file.</p>
+          </details>
+          <details>
+            <summary data-i18n="faq3Q">Does vectorizing a photo work well?</summary>
+            <p data-i18n="faq3A">Usually not. Photographs produce thousands of paths and an SVG that is often larger and slower to render than the original PNG or JPEG. Vectorization pays off for logos, icons, line art, flat illustrations and scanned drawings.</p>
+          </details>
+          <details>
+            <summary data-i18n="faq4Q">Why is my SVG larger than the source PNG?</summary>
+            <p data-i18n="faq4A">Every colour region becomes a path with its own coordinates. When an image contains thousands of small regions, storing those coordinates costs more bytes than pixel compression. Lower the max edge, raise filter speckle, or reduce the colour count to bring the size down.</p>
+          </details>
+          <details>
+            <summary data-i18n="faq5Q">What is VTracer?</summary>
+            <p data-i18n="faq5A">VTracer is an open-source raster-to-vector tracer from VisionCortex, written in Rust. It clusters pixels into colour regions and fits curves along their borders, so it handles full-colour artwork rather than only black-and-white images like a classic auto-trace.</p>
+          </details>
+          <details>
+            <summary data-i18n="faq6Q">Can I edit the result in Illustrator, Figma or Inkscape?</summary>
+            <p data-i18n="faq6A">Yes. The output is a plain SVG made of standard path elements with solid fills. Keep the path count in the low hundreds if you want the file to stay comfortable to edit by hand.</p>
+          </details>
+          <details>
+            <summary data-i18n="faq7Q">Is it really free?</summary>
+            <p data-i18n="faq7A">Yes — free and unlimited, with no account, no file-size quota and no watermark. There is no backend to pay for, because the conversion runs on your own machine.</p>
+          </details>
+        </div>
+
+        <p class="about-foot">
+          <span data-i18n="footEngine">Vectorization by</span>
+          <a href="https://github.com/visioncortex/vtracer" target="_blank" rel="noopener noreferrer">VTracer</a>
+          ·
+          <a href="https://github.com/ibeeger/b2svg" target="_blank" rel="noopener noreferrer"><span data-i18n="footSource">Source on GitHub</span></a>
+        </p>
+      </div>
+    </section>
 
     <script type="module" src="/src/main.ts"></script>
   </body>

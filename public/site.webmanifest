@@ -1,0 +1,16 @@
+{
+  "name": "Bitmap to Vector — Image to SVG Converter",
+  "short_name": "Bitmap to Vector",
+  "description": "Convert PNG, JPEG, GIF and WebP images into clean SVG vector paths entirely in your browser.",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "background_color": "#0f1115",
+  "theme_color": "#0f1115",
+  "categories": ["graphics", "utilities", "productivity"],
+  "icons": [
+    { "src": "/icon.svg", "sizes": "any", "type": "image/svg+xml" },
+    { "src": "/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "/apple-touch-icon.png", "sizes": "180x180", "type": "image/png" }
+  ]
+}

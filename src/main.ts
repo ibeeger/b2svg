@@ -1,5 +1,6 @@
 import './style.css';
 import { applyStaticI18n, getLocale, setLocale, t, tx, type L10n } from './lib/i18n';
+import { syncHeadMeta } from './lib/seo';
 import { decodeToRgba, formatBytes } from './lib/image';
 import { activeControls, type Control } from './lib/controls';
 import { PRESETS, presetById } from './lib/presets';
@@ -408,6 +409,7 @@ els.download.onclick = download;
 /** Repaint every translatable surface. Trace results are language-neutral. */
 function applyLocale() {
   applyStaticI18n();
+  syncHeadMeta();
   // The toggle shows the language you'd switch TO.
   els.langToggle.textContent = getLocale() === 'zh' ? 'EN' : '中文';
   renderPresets();

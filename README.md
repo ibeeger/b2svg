@@ -105,5 +105,32 @@ src/lib/image.ts                解码 + 缩放 + 可选透明合成
 src/lib/controls.ts             参数面板的声明式定义
 src/lib/presets.ts              各类图像的起始参数
 src/lib/samples.ts              内置样本（SVG 源码，浏览器内栅格化）
+src/lib/i18n.ts                 中英文案表 + `?lang=` 语言解析
+src/lib/seo.ts                  按语言同步 title / description / canonical / OG
+assets/                         图片资源的 SVG 源文件（不参与构建）
+public/                         原样拷贝到 dist 根目录的静态文件
 test/vtracer-glue.test.js       验证生成的 glue 不含 Node 依赖且能正常追踪
 ```
+
+## SEO
+
+站点是单页工具，`<head>` 之外几乎没有可抓取的文本，所以做了这几件事：
+
+- `index.html` 里写死英文的 title / description / canonical / hreflang / Open Graph /
+  Twitter Card，以及 `WebApplication` + `FAQPage` 的 JSON-LD——不执行 JS 的爬虫也能拿到完整信息。
+- 页面下方是一段正文（简介 / 特性 / 步骤 / FAQ），中英双语，FAQ 内容与 JSON-LD 一一对应。
+- 语言可以用 `?lang=zh` / `?lang=en` 寻址，切换时 `history.replaceState` 更新 URL，
+  `src/lib/seo.ts` 同步改写 title、description、canonical 和 OG——这样中文版才有独立 URL 被收录。
+  英文版的规范地址是裸域名，中文版是 `?lang=zh`，两者互为 hreflang。
+- `public/` 下有 `robots.txt`、`sitemap.xml`、`site.webmanifest` 和 `CNAME`。
+
+`public/` 里的位图由 `assets/` 下的 SVG 源文件生成，改完源文件后重新跑：
+
+```bash
+rsvg-convert -w 1200 -h 630 assets/og-card.svg -o public/og.png
+rsvg-convert -w 180  -h 180 assets/icon.svg    -o public/apple-touch-icon.png
+rsvg-convert -w 512  -h 512 assets/icon.svg    -o public/icon-512.png
+```
+
+（`rsvg-convert` 来自 `brew install librsvg`；这一步是手动的，产物已提交，
+构建和 CI 都不依赖它。）
